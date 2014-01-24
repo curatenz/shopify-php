@@ -103,22 +103,6 @@
         return (int) $params[$index];
     }
 
-
-    class CurlException extends \Exception { }
-    class Exception extends \Exception
-    {
-        protected $info;
-
-        function __construct($info)
-        {
-            $this->info = $info;
-            parent::__construct($info['response_headers']['http_status_message'], $info['response_headers']['http_status_code']);
-        }
-
-        function getInfo() { $this->info; }
-    }
-
-
     function legacy_token_to_oauth_token($shops_token, $shared_secret, $private_app=false)
     {
         return $private_app ? $secret : md5($shared_secret.$shops_token);
