@@ -30,5 +30,10 @@
   },
   "suggest": {
     "monolog/monolog": "Add logging functionality"
+  },
+  "autoload": {
+    "psr-0": {
+      "Shopify\\": "lib/"
+    }
   }
 }
