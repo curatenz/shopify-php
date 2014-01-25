@@ -61,25 +61,6 @@
         return (is_array($response) and !empty($response)) ? array_shift($response) : $response;
     }
 
-
-    function calls_made($response_headers)
-    {
-        return _shop_api_call_limit_param(0, $response_headers);
-    }
-
-
-    function call_limit($response_headers)
-    {
-        return _shop_api_call_limit_param(1, $response_headers);
-    }
-
-
-    function calls_left($response_headers)
-    {
-        return call_limit($response_headers) - calls_made($response_headers);
-    }
-
-
     function _shop_api_call_limit_param($index, $response_headers)
     {
         $params = explode('/', $response_headers['http_x_shopify_shop_api_call_limit']);
