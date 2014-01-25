@@ -9,23 +9,6 @@
         return "http://$shop/admin/api/auth?api_key=$api_key";
     }
 
-
-    function is_valid_request($query_params, $shared_secret)
-    {
-        $seconds_in_a_day = 24 * 60 * 60;
-        $older_than_a_day = $query_params['timestamp'] < (time() - $seconds_in_a_day);
-        if ($older_than_a_day) return false;
-
-        $signature = $query_params['signature'];
-        unset($query_params['signature']);
-
-        foreach ($query_params as $key=>$val) $params[] = "$key=$val";
-        sort($params);
-
-        return (md5($shared_secret.implode('', $params)) === $signature);
-    }
-
-
     function permission_url($shop, $api_key, $scope=array(), $redirect_uri='')
     {
         $scope = empty($scope) ? '' : '&scope='.implode(',', $scope);

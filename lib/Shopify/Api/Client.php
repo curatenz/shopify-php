@@ -87,18 +87,55 @@ class Client
     public function validateSignature(array $params)
     {
 
-        $signature = array_key_exists('signature', $params)
-            ? $params['signature'] : null;
+        $this->assertRequestParamIsNotNull(
+            $params, 'signature', 'Expected signature in query params'
+        );
 
-        if (is_null($signature)) {
-            $e = new RequestException('Expected signature in query params');
-            $e->setQueryParams($params);
-            throw $e;
-        }
-
+        $signature = $params['signature'];
         unset($params['signature']);
 
         return $this->generateSignature($params) === $signature;
+
+    }
+
+    /**
+     * returns true if the supplied request params are valid
+     * @return boolean
+     */
+    public function isValidRequest(array $params)
+    {
+
+        $this->assertRequestParamIsNotNull(
+            $params, 'timestamp', 'Expected timestamp in query params'
+        );
+
+        $requestTimestamp = $params['timestamp'];
+        $secondsPerDay = 24 * 60 * 60;
+        $olderThanOneDay = $requestTimestamp < (time() - $secondsPerDay);
+
+        return ($olderThanOneDay) ? false : $this->validateSignature($params);
+
+    }
+
+    /**
+     * throws an exception if the param in the supplied request is null
+     * @param array $params
+     * @param string $key
+     * @param string $message
+     * @throws RequestException
+     */
+    protected function assertRequestParamIsNotNull(
+        array $params, $key, $message
+    ) {
+
+        $value = array_key_exists($key, $params)
+            ? $params[$key] : null;
+
+        if (is_null($value)) {
+            $e = new RequestException($message);
+            $e->setQueryParams($params);
+            throw $e;
+        }
 
     }
 
