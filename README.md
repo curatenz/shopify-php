@@ -33,7 +33,39 @@ visit http://getcomposer.org/
 
 ## Usage
 
-Coming soon...
+### Authentication
+
+If you do not already have a Shopify API Permanent Access Token, you will need
+you authenticate with the Shopify API first
+
+TODO: info on HTTP Client
+
+    $redirector = new \Shopify\Redirector\HeaderRedirector();
+
+    $authenticate = new \Shopify\Api\AuthenticationGateway(
+        $httpClient, $redirector
+    );
+
+    $authenticate->forShopName('mycoolshop')
+        ->usingClientId('XXX1234567890') // get this from your Shopify Account
+        ->withScope(array('write_products', 'read_orders'))
+        ->andReturningTo("http://wherever.you/like")
+        ->initiateLogin();
+
+This will redirect your user to a Shopify login screen where they will need
+to authenticate with their Shopify credentials. After doing that, Shopify will
+perform a GET request to your redirect URI, that will look like:
+
+    GET http://wherever.you/like?code=TEMP_TOKEN
+
+Your application will need to capture the `code` query param from the request
+and use that to get the permanent access token from Shopify
+
+TODO: finish this off
+
+### Interacting with the Shopify API
+
+TODO: coming soon...
 
 ## Contributing
 
