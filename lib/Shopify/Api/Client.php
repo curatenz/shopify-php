@@ -57,7 +57,7 @@ class Client
      * @param array $params
      * @return string
      */
-    public function generateSignature($params)
+    public function generateSignature(array $params)
     {
 
         // Collect the URL parameters into an array of elements of the format
@@ -77,6 +77,28 @@ class Client
 
         // Final calculated_signature to compare against
         return md5($this->sharedSecret . $calculated);
+
+    }
+
+    /**
+     * validate the signature on the supplied query parameters
+     * @return boolean
+     */
+    public function validateSignature(array $params)
+    {
+
+        $signature = array_key_exists('signature', $params)
+            ? $params['signature'] : null;
+
+        if (is_null($signature)) {
+            $e = new RequestException('Expected signature in query params');
+            $e->setQueryParams($params);
+            throw $e;
+        }
+
+        unset($params['signature']);
+
+        return $this->generateSignature($params) === $signature;
 
     }
 

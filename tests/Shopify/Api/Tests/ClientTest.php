@@ -24,6 +24,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($signature, $api->generateSignature($params));
 
+        $paramsWithSignature = $params;
+        $paramsWithSignature['signature'] = $signature;
+
+        $this->assertTrue($api->validateSignature($paramsWithSignature));
+
     }
 
 }
