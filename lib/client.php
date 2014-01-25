@@ -1,21 +1,9 @@
 <?php
 
-    namespace sandeepshetty\shopify_api;
-    require 'vendor/autoload.php';
-
-
     function install_url($shop, $api_key)
     {
         return "http://$shop/admin/api/auth?api_key=$api_key";
     }
-
-    function permission_url($shop, $api_key, $scope=array(), $redirect_uri='')
-    {
-        $scope = empty($scope) ? '' : '&scope='.implode(',', $scope);
-        $redirect_uri = empty($redirect_uri) ? '' : '&redirect_uri='.urlencode($redirect_uri);
-        return "https://$shop/admin/oauth/authorize?client_id=$api_key$scope$redirect_uri";
-    }
-
 
     function oauth_access_token($shop, $api_key, $shared_secret, $code)
     {
@@ -61,12 +49,6 @@
         return (is_array($response) and !empty($response)) ? array_shift($response) : $response;
     }
 
-    function _shop_api_call_limit_param($index, $response_headers)
-    {
-        $params = explode('/', $response_headers['http_x_shopify_shop_api_call_limit']);
-        return (int) $params[$index];
-    }
-
     function legacy_token_to_oauth_token($shops_token, $shared_secret, $private_app=false)
     {
         return $private_app ? $secret : md5($shared_secret.$shops_token);
@@ -78,5 +60,3 @@
         return "https://$api_key:$password@$shop/";
 
     }
-
-?>
