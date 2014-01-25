@@ -17,7 +17,7 @@ The canoncial repository for this stream of development is
 
 ## Getting Started
 
-### Download via [Composer](http://getcomposer.org/)
+Install shopify-php via [Composer](http://getcomposer.org/)
 
 Create a `composer.json` file if you don't already have one in your projects
 root directory and require shopify-php:
@@ -50,7 +50,7 @@ been installed via composer. Then from your command line, simple run:
 
 This library is released under the [MIT License](https://github.com/TeamOffshoot/shopify-php/blob/master/LICENSE.txt)
 
-# Acknowledgements
+## Acknowledgements
 
 Thanks to [Sandeep Shetty](https://github.com/sandeepshetty/shopify_api) for
 his development of the initial code base.
