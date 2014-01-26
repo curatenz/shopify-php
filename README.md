@@ -96,7 +96,8 @@ and use that to get the permanent access token from Shopify
     $temporaryToken = $_GET['code'];
     // You should do some input sanitization to $temporaryToken here
 
-    $permanentAccessToken = $authenticate->exchange($temporaryToken);
+    $permanentAccessToken = $authenticate->usingClientSecret('ABC123XYZ')
+        ->toExchange($temporaryToken);
 
 ### Interacting with the Shopify API
 
