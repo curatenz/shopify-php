@@ -5,12 +5,6 @@
         return "http://$shop/admin/api/auth?api_key=$api_key";
     }
 
-    function oauth_access_token($shop, $api_key, $shared_secret, $code)
-    {
-        return _api('POST', "https://$shop/admin/oauth/access_token", NULL, array('client_id'=>$api_key, 'client_secret'=>$shared_secret, 'code'=>$code));
-    }
-
-
     function client($shop, $shops_token, $api_key, $shared_secret, $private_app=false)
     {
         $password = $shops_token;
@@ -47,16 +41,4 @@
                 throw new ApiException(compact('method', 'path', 'params', 'response_headers', 'response', 'shops_myshopify_domain', 'shops_token'));
 
         return (is_array($response) and !empty($response)) ? array_shift($response) : $response;
-    }
-
-    function legacy_token_to_oauth_token($shops_token, $shared_secret, $private_app=false)
-    {
-        return $private_app ? $secret : md5($shared_secret.$shops_token);
-    }
-
-
-    function legacy_baseurl($shop, $api_key, $password)
-    {
-        return "https://$api_key:$password@$shop/";
-
     }
