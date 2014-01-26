@@ -9,12 +9,16 @@ class AuthenticationGateway
 {
 
     const AUTHORIZATION_URI = 'https://%s.myshopify.com/admin/oauth/authorize';
+    const ACCESS_URI = 'https://%s.myshopify.com/admin/oauth/access_token';
 
     /** @var string */
     protected $shopName;
 
     /** @var string */
     protected $clientId;
+
+    /** @var string */
+    protected $clientSecret;
 
     /** @var array */
     protected $scope;
@@ -101,6 +105,51 @@ class AuthenticationGateway
     }
 
     /**
+     * a simple DSL on top of setting the client secret
+     * @param string $clientSecret
+     * @return AuthenticationGateway
+     */
+    public function usingClientSecret($clientSecret)
+    {
+        $this->setClientSecret($clientSecret);
+        return $this;
+    }
+
+    /**
+     * exchange the temporary token for a permanent access token
+     * @param string $temporaryToken
+     * @return string
+     */
+    public function toExchange($temporaryToken)
+    {
+
+        if (!$this->canAuthenticateUser($temporaryToken)) {
+            throw new \RuntimeException(
+                'Cannot authenticate user, dependencies are missing'
+            );
+        }
+
+        if (!$this->codeIsValid($code)) {
+            throw new \InvalidArgumentException('Shopify code is invalid');
+        }
+
+        $response = json_decode($this->httpClient->get(
+            $this->getAccessUri(),
+            array(
+                'client_id' => $this->clientId,
+                'client_secret' => $this->clientSecret,
+                'code' => $code,
+            )
+        ));
+
+        $this->token = isset($response->access_token)
+            ? $response->access_token : null;
+
+        return $this->token;
+
+    }
+
+    /**
      * build the shopify authentication uri that users are
      * forwarded to for authentication
      * @return string
@@ -121,6 +170,16 @@ class AuthenticationGateway
 
         return $authorizeUri . '?' . http_build_query($uriParams);
 
+    }
+
+    /**
+     * build the shopify access uri that users are forwarded to for exchanging
+     * the temporary token with the permanent access token
+     * @return string
+     */
+    public function getAccessUri()
+    {
+        return sprintf(self::ACCESS_URI, $this->getShopName());
     }
 
     /**
@@ -149,6 +208,29 @@ class AuthenticationGateway
         return $this->getClientId()
             && $this->getShopName()
             && $this->getPreparedScope();
+    }
+
+    /**
+     * assert that it is possible to proceed with authenticating the user
+     * @param string $clientSecret
+     * @param string $temporaryToken
+     * @return boolean
+     */
+    protected function canAuthenticateUser($temporaryToken)
+    {
+        return $this->getClientId()
+            && $this->getClientSecret()
+            && $temporaryToken;
+    }
+
+    /**
+     * assert that the shopify code is valid for use
+     * @param string $code
+     * @return boolean
+     */
+    protected function codeIsValid($code)
+    {
+        return !is_null($code);
     }
 
     /**
@@ -185,6 +267,24 @@ class AuthenticationGateway
     protected function getClientId()
     {
         return $this->clientId;
+    }
+
+    /**
+     * set the client secret
+     * @param string $clientSecret
+     */
+    protected function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * get the client secret
+     * @return string
+     */
+    protected function getClientSecret()
+    {
+        return $this->clientSecret;
     }
 
     /**
