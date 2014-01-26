@@ -129,23 +129,20 @@ class AuthenticationGateway
             );
         }
 
-        if (!$this->codeIsValid($code)) {
+        if (!$this->codeIsValid($temporaryToken)) {
             throw new \InvalidArgumentException('Shopify code is invalid');
         }
 
-        $response = json_decode($this->httpClient->get(
+        $response = json_decode($this->httpClient->post(
             $this->getAccessUri(),
             array(
-                'client_id' => $this->clientId,
-                'client_secret' => $this->clientSecret,
-                'code' => $code,
+                'client_id' => $this->getClientId(),
+                'client_secret' => $this->getClientSecret(),
+                'code' => $temporaryToken,
             )
         ));
 
-        $this->token = isset($response->access_token)
-            ? $response->access_token : null;
-
-        return $this->token;
+        return isset($response->access_token) ? $response->access_token : null;
 
     }
 

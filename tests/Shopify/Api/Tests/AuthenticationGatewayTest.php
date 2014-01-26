@@ -5,6 +5,24 @@ namespace Shopify\Api\Tests;
 class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
 {
 
+    protected $authenticate;
+
+    protected $httpClient;
+
+    protected $redirector;
+
+    public function setUp()
+    {
+
+        $this->httpClient = $this->getMock('Shopify\HttpClient');
+        $this->redirector = $this->getMock('Shopify\Redirector');
+
+        $this->authenticate = new \Shopify\Api\AuthenticationGateway(
+            $this->httpClient, $this->redirector
+        );
+
+    }
+
     public function testInitiatingLogin()
     {
 
@@ -21,27 +39,56 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
                 'redirect_uri' => $redirectUri
             ));
 
-        $httpClient = $this->getMock('Shopify\HttpClient');
-        $redirector = $this->getMock('Shopify\Redirector');
+        $this->redirector->expects($this->once())
+                         ->method('redirect')
+                         ->with($authorizeUrl)
+                         ->will($this->returnValue($redirectUri));
 
-        $redirector->expects($this->once())
-                   ->method('redirect')
-                   ->with($authorizeUrl)
-                   ->will($this->returnValue($redirectUri));
-
-        $authenticate = new \Shopify\Api\AuthenticationGateway(
-            $httpClient, $redirector
-        );
-
-        $authenticate->forShopName($shopName)
-                     ->usingClientId($clientId)
-                     ->withScope($permissions)
-                     ->andReturningTo($redirectUri)
-                     ->initiateLogin();
+        $this->authenticate->forShopName($shopName)
+                           ->usingClientId($clientId)
+                           ->withScope($permissions)
+                           ->andReturningTo($redirectUri)
+                           ->initiateLogin();
 
         $this->assertEquals(
-            $authorizeUrl, $authenticate->getAuthenticationUri()
+            $authorizeUrl, $this->authenticate->getAuthenticationUri()
         );
+
+    }
+
+    public function testExchangingToken()
+    {
+
+        $shopName = 'shop-name';
+        $clientId = 'XXX1234567890';
+        $clientSecret = 'ABC123XYZ';
+        $temporaryToken = 'TEMP_TOKEN';
+        $permanentAccessToken = 'ACCESS_TOKEN';
+
+        $accessUri = "https://{$shopName}.myshopify.com/admin/oauth/access_token";
+        $params = array(
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret,
+            'code' => $temporaryToken,
+        );
+
+        $response = "";
+
+        $this->httpClient->expects($this->once())
+                         ->method('post')
+                         ->with($accessUri, $params)
+                         ->will($this->returnValue($response));
+
+        $token = $this->authenticate->forShopName($shopName)
+                                    ->usingClientId($clientId)
+                                    ->usingClientSecret($clientSecret)
+                                    ->toExchange($temporaryToken);
+
+        $this->assertEquals(
+            $accessUri, $this->authenticate->getAccessUri()
+        );
+
+        $this->assertEquals($permanentAccessToken, $token);
 
     }
 
