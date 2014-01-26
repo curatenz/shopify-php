@@ -31,6 +31,37 @@ root directory and require shopify-php:
 To learn more about Composer, including the complete installation process,
 visit http://getcomposer.org/
 
+### Using cURL
+
+If you're using a cURL based HttpClient like the `BuzzAdapter`, you will want
+to include the cacert.pem file that can be found at
+[http://curl.haxx.se/docs/caextract.html](http://curl.haxx.se/docs/caextract.html)
+
+You can add this as a dependency in your composer file. Your `composer.json`
+might look something like this:
+
+    {
+      "require": {
+        "offshoot/shopify-php": "1.0.x",
+        "haxx-se/curl": "1.0.0"
+      },
+      "repositories": [
+        {
+          "type": "package",
+          "package": {
+            "name": "haxx-se/curl",
+            "version": "1.0.0",
+            "dist": {
+              "url": "http://curl.haxx.se/ca/cacert.pem",
+              "type": "file"
+            }
+          }
+        }
+      ]
+    }
+
+You will be able to find the cacert.pem file in `vendor/haxx-se/curl/cacert.pem`
+
 ## Usage
 
 ### Authentication
@@ -38,7 +69,8 @@ visit http://getcomposer.org/
 If you do not already have a Shopify API Permanent Access Token, you will need
 you authenticate with the Shopify API first
 
-TODO: info on HTTP Client
+    $pathToCertificateFile = "vendor/haxx-se/curl/cacert.pem";
+    $httpClient = new \Shopify\HttpClient\BuzzAdapter($pathToCertificateFile);
 
     $redirector = new \Shopify\Redirector\HeaderRedirector();
 
@@ -61,7 +93,10 @@ perform a GET request to your redirect URI, that will look like:
 Your application will need to capture the `code` query param from the request
 and use that to get the permanent access token from Shopify
 
-TODO: finish this off
+    $temporaryToken = $_GET['code'];
+    // You should do some input sanitization to $temporaryToken here
+
+    $permanentAccessToken = $authenticate->exchange($temporaryToken);
 
 ### Interacting with the Shopify API
 
