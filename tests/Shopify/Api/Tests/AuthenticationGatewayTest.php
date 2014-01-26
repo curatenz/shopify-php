@@ -72,7 +72,7 @@ class AuthenticationGatewayTest extends \PHPUnit_Framework_TestCase
             'code' => $temporaryToken,
         );
 
-        $response = "";
+        $response = '{"access_token": "' . $permanentAccessToken . '"}';
 
         $this->httpClient->expects($this->once())
                          ->method('post')
