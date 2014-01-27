@@ -12,7 +12,7 @@ interface HttpClient
      * set the Shopify permanent access token
      * @param string $token
      */
-    public function setShopifyAccessToken($token);
+    public function setAccessToken($token);
 
     /**
      * make a get request to the given uri

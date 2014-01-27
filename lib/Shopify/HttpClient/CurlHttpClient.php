@@ -100,6 +100,9 @@ class CurlHttpClient extends HttpClientAdapter
         curl_setopt($ch, CURLOPT_USERAGENT, 'offshoot/shopify-php client');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->verifyHost);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            self::SHOPIFY_ACCESS_TOKEN_HEADER . ": " . $this->getAccessToken();
+        ));
 
         if ($this->verifyPeer === false) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

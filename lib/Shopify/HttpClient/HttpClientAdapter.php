@@ -7,14 +7,20 @@ use Shopify\HttpClient;
 abstract class HttpClientAdapter implements HttpClient
 {
 
+    const SHOPIFY_ACCESS_TOKEN_HEADER = 'X-Shopify-Access-Token';
+
     /** @var string */
     protected $accessToken;
 
-    public function setShopifyAccessToken($token)
+    public function setAccessToken($token)
     {
         $this->accessToken = $token;
     }
 
-    abstract protected function applyShopifyAccessTokenToRequest();
+    /**
+     * get the Shopify permanent access token
+     * @return string
+     */
+    protected function getAccessToken();
 
 }

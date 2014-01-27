@@ -62,7 +62,7 @@ class Client
      */
     public function get($resource, array $params = array())
     {
-        return $this->makeApiRequest($resource, $params, HttpClient::GET);
+        return $this->makeApiRequest($resource, $params);
     }
 
     /**
@@ -191,7 +191,7 @@ class Client
 
         $uri = $this->requestUri . '/' . ltrim($resource, '/') . '.json';
 
-        $this->getHttpClient()->setShopifyAccessToken($this->getAccessToken());
+        $this->getHttpClient()->setAccessToken($this->getAccessToken());
 
         switch ($method) {
             case HttpClient::GET:
