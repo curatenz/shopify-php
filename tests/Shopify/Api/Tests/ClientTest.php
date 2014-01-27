@@ -46,12 +46,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
 
         $ordersUri = '/admin/orders.json';
+        $ordersRequest = $this->getOrdersRequest();
         $ordersResponse = $this->getOrdersResponse();
         $order = json_decode($ordersResponse);
 
         $this->httpClient->expects($this->once())
                          ->method('post')
-                         ->with($this->shopUri . $ordersUri)
+                         ->with($this->shopUri . $ordersUri, $ordersRequest)
                          ->will($this->returnValue($ordersResponse));
 
         // create a new order
@@ -109,6 +110,38 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $callsRemaining, $this->api->getNumberOfCallsRemaining($headers)
         );
 
+    }
+
+    protected function getOrdersRequest()
+    {
+        return array(
+            'order' => array(
+                'line_items' => array(
+                    0 => array(
+                        'grams' => 1300,
+                        'price' => 74.99,
+                        'quantity' => 3,
+                        'title' => "Big Brown Bear Boots",
+                    ),
+                ),
+                'tax_lines' => array(
+                    0 => array(
+                        'price' => 29.25,
+                        'rate' => 0.13,
+                        'title' => "HST",
+                    ),
+                ),
+                'transactions' => array(
+                    0 => array(
+                        'amount' => 254.22,
+                        'kind' => "sale",
+                        'status' => "success",
+                    )
+                ),
+                'total_tax' => 29.25,
+                'currency' => "CAD",
+            )
+        );
     }
 
     protected function getOrdersResponse()
