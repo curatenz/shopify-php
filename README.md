@@ -100,7 +100,25 @@ and use that to get the permanent access token from Shopify
 
 ### Interacting with the Shopify API
 
-TODO: coming soon...
+Once you have a valid Shopify Permanent Access Token, you can start making calls
+to the Shopify API
+
+First setup an instance of the Shopify API client.
+
+    $client = new \Shopify\Api\Client($httpClient);
+    $client->setAccessToken($permanentAccessToken);
+    $client->setClientSecret('ABC123XYZ');
+
+Then you're ready to start interacting with the Shopify API. Maybe you want to
+get all of the products from your store
+
+    $products = $client->get('/admin/products.json', array(
+        'collection_id' => '987654321'
+    ));
+
+Maybe you want to get the details of a specific order
+
+    $order = $client->get('/admin/orders/123456789.json');
 
 ## Contributing
 
