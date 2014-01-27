@@ -62,7 +62,7 @@ class Client
      * set the shared secret
      * @param string
      */
-    public function setSharedSecret($secret)
+    public function setClientSecret($secret)
     {
         $this->sharedSecret = $secret;
     }
@@ -111,7 +111,7 @@ class Client
         $calculated = implode('', $calculated);
 
         // Final calculated_signature to compare against
-        return md5($this->sharedSecret . $calculated);
+        return md5($this->getClientSecret() . $calculated);
 
     }
 
@@ -257,6 +257,15 @@ class Client
     protected function getShopName()
     {
         return $this->shopName;
+    }
+
+    /**
+     * get the shared secret
+     * @return string
+     */
+    protected function getClientSecret()
+    {
+        return $this->sharedSecret;
     }
 
     /**
