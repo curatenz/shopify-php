@@ -9,7 +9,6 @@ The canoncial repository for this stream of development is
 
 * PHP 5.3 (or higher)
 * ext-curl, ext-json
-* kriswallsmith/buzz 0.10
 
 ## Development Requirements
 
@@ -33,7 +32,7 @@ visit http://getcomposer.org/
 
 ### Using cURL
 
-If you're using a cURL based HttpClient like the `BuzzAdapter`, you will want
+If you're using a cURL based HttpClient like the `CurlHttpClient`, you will want
 to include the cacert.pem file that can be found at
 [http://curl.haxx.se/docs/caextract.html](http://curl.haxx.se/docs/caextract.html)
 
@@ -70,7 +69,7 @@ If you do not already have a Shopify API Permanent Access Token, you will need
 you authenticate with the Shopify API first
 
     $pathToCertificateFile = "vendor/haxx-se/curl/cacert.pem";
-    $httpClient = new \Shopify\HttpClient\BuzzAdapter($pathToCertificateFile);
+    $httpClient = new \Shopify\HttpClient\CurlHttpClient($pathToCertificateFile);
 
     $redirector = new \Shopify\Redirector\HeaderRedirector();
 
@@ -107,7 +106,8 @@ TODO: coming soon...
 
 Contributions are welcome. Just fork the repository and send a pull request.
 Please be sure to include test coverage with your pull request. You can learn
-more about Pull Requests [here](https://help.github.com/articles/creating-a-pull-request)
+more about Pull Requests
+[here](https://help.github.com/articles/creating-a-pull-request)
 
 In order to run the test suite, ensure that the development dependencies have
 been installed via composer. Then from your command line, simple run:
@@ -116,7 +116,8 @@ been installed via composer. Then from your command line, simple run:
 
 ## License
 
-This library is released under the [MIT License](https://github.com/TeamOffshoot/shopify-php/blob/master/LICENSE.txt)
+This library is released under the
+[MIT License](https://github.com/TeamOffshoot/shopify-php/blob/master/LICENSE.txt)
 
 ## Acknowledgements
 

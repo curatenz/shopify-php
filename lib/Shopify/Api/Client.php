@@ -55,6 +55,17 @@ class Client
     }
 
     /**
+     * make a GET request to the Shopify API
+     * @param string $resource
+     * @param array $params
+     * @return
+     */
+    public function get($resource, array $params = array())
+    {
+        return $this->makeApiRequest($resource, $params, HttpClient::GET);
+    }
+
+    /**
      * generate the signature as required by shopify
      * @param array $params
      * @return string
@@ -165,6 +176,56 @@ class Client
         return array_key_exists($index, $params)
             ? (int) $params[$index] : 0;
 
+    }
+
+    /**
+     * make a generic request to the api
+     * @param string $resource
+     * @param array $params
+     * @param string $method
+     * @return \stdClass
+     */
+    protected function makeApiRequest(
+        $resource, array $params = array(), $method = HttpClient::GET
+    ) {
+
+        $uri = $this->requestUri . '/' . ltrim($resource, '/') . '.json';
+
+        $this->getHttpClient()->setShopifyAccessToken($this->getAccessToken());
+
+        switch ($method) {
+            case HttpClient::GET:
+                $response = $this->getHttpClient()->get($uri, $params);
+                break;
+            case 'POST':
+            case 'PUT':
+            case 'DELETE':
+            default:
+                throw new \RuntimeException(
+                    'Currently only "GET" is supported.'
+                );
+        }
+
+        return json_decode($response);
+
+    }
+
+    /**
+     * get the HTTP Client
+     * @return HttpClient
+     */
+    protected function getHttpClient()
+    {
+        return $this->httpClient;
+    }
+
+    /**
+     * get the shopify permanent access token
+     * @return string
+     */
+    protected function getAccessToken()
+    {
+        return $this->accessToken;
     }
 
     /**
