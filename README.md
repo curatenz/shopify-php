@@ -5,6 +5,10 @@ A simple [Shopify API](http://api.shopify.com/) client in PHP.
 The canoncial repository for this stream of development is
 [https://github.com/TeamOffshoot/shopify-php](https://github.com/TeamOffshoot/shopify-php)
 
+This API Client is still in a pre-1.0 state, so you can expect:
+* some bugs (feel free to submit a pull request with bug fixes and test coverage)
+* possibly some breaking API changes between v0.9 and v1.0
+
 ## Requirements
 
 * PHP 5.3 (or higher)
@@ -23,7 +27,7 @@ root directory and require shopify-php:
 
     {
       "require": {
-        "offshoot/shopify-php": "1.0.x"
+        "offshoot/shopify-php": "0.9.x"
       }
     }
 
@@ -41,7 +45,7 @@ might look something like this:
 
     {
       "require": {
-        "offshoot/shopify-php": "1.0.x",
+        "offshoot/shopify-php": "0.9.x",
         "haxx-se/curl": "1.0.0"
       },
       "repositories": [
