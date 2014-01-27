@@ -108,6 +108,7 @@ First setup an instance of the Shopify API client.
     $client = new \Shopify\Api\Client($httpClient);
     $client->setAccessToken($permanentAccessToken);
     $client->setClientSecret('ABC123XYZ');
+    $client->setShopName('mycoolshop');
 
 Then you're ready to start interacting with the Shopify API. Maybe you want to
 get all of the products from your store
