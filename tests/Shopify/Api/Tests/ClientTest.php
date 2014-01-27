@@ -57,7 +57,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         // create a new order
         // @see http://docs.shopify.com/api/order#create
-        $this->assertEquals($order, $this->api->get($ordersUri));
+        $this->assertEquals($order, $this->api->post(
+            $ordersUri, $ordersRequest
+        ));
 
     }
 
