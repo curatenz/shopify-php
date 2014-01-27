@@ -121,6 +121,39 @@ Maybe you want to get the details of a specific order
 
     $order = $client->get('/admin/orders/123456789.json');
 
+Or maybe you want to create a new Order
+
+    $order = $client->post('/admin/orders.json', array(
+        'order' => array(
+            'line_items' => array(
+                0 => array(
+                    'grams' => 1300,
+                    'price' => 74.99,
+                    'quantity' => 3,
+                    'title' => "Big Brown Bear Boots",
+                ),
+            ),
+            'tax_lines' => array(
+                0 => array(
+                    'price' => 29.25,
+                    'rate' => 0.13,
+                    'title' => "HST",
+                ),
+            ),
+            'transactions' => array(
+                0 => array(
+                    'amount' => 254.22,
+                    'kind' => "sale",
+                    'status' => "success",
+                )
+            ),
+            'total_tax' => 29.25,
+            'currency' => "CAD",
+        )
+    ));
+
+#### TODO: Implement PUT and DELETE functionality
+
 ## Contributing
 
 Contributions are welcome. Just fork the repository and send a pull request.
