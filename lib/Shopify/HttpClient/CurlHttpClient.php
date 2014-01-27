@@ -33,6 +33,12 @@ class CurlHttpClient extends HttpClientAdapter
     protected $certificatePath;
 
     /**
+     * an array of headers to be used in the request
+     * @var array
+     */
+    protected $headers;
+
+    /**
      *
      *
      * @param string $certificatePath
@@ -41,6 +47,7 @@ class CurlHttpClient extends HttpClientAdapter
     {
 
         $this->certificatePath = $certificatePath;
+        $this->headers = array();
 
     }
 
@@ -76,12 +83,19 @@ class CurlHttpClient extends HttpClientAdapter
 
     }
 
-    public function post($uri, array $params = array())
+    public function post($uri, $params = null)
     {
 
         $ch = $this->initCurlHandler($uri);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+
+        if (!is_null($params) && !is_array($params)) {
+            $this->headers[] = 'Content-Type: application/json';
+        }
+
+        if (!is_null($params)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        }
 
         return $this->makeRequest($ch);
 
@@ -104,12 +118,8 @@ class CurlHttpClient extends HttpClientAdapter
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->verifyHost);
 
         if ($this->getAccessToken()) {
-            $headers[] = self::SHOPIFY_ACCESS_TOKEN_HEADER
+            $this->headers[] = self::SHOPIFY_ACCESS_TOKEN_HEADER
                 . ": " . $this->getAccessToken();
-        }
-
-        if (count($headers)) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
 
         if ($this->verifyPeer === false) {
@@ -137,6 +147,10 @@ class CurlHttpClient extends HttpClientAdapter
      */
     protected function makeRequest($ch)
     {
+
+        if (count($this->headers)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
 
         $response = curl_exec($ch);
 

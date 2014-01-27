@@ -52,7 +52,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->httpClient->expects($this->once())
                          ->method('post')
-                         ->with($this->shopUri . $ordersUri, $ordersRequest)
+                         ->with(
+                            $this->shopUri . $ordersUri,
+                            json_encode($ordersRequest)
+                         )
                          ->will($this->returnValue($ordersResponse));
 
         // create a new order

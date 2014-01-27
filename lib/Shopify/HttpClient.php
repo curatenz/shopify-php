@@ -25,9 +25,9 @@ interface HttpClient
     /**
      * make a post request to the given uri
      * @param string $uri
-     * @param array $params
+     * @param array|string $params
      * @return mixed
      */
-    public function post($uri, array $params = array());
+    public function post($uri, $params = null);
 
 }
