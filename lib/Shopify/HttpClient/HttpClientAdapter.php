@@ -21,6 +21,10 @@ abstract class HttpClientAdapter implements HttpClient
      * get the Shopify permanent access token
      * @return string
      */
-    protected function getAccessToken();
+    protected function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
 
 }
