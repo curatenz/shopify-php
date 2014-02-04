@@ -96,11 +96,21 @@ perform a GET request to your redirect URI, that will look like:
 Your application will need to capture the `code` query param from the request
 and use that to get the permanent access token from Shopify
 
-    $temporaryToken = $_GET['code'];
-    // You should do some input sanitization to $temporaryToken here
+    $client = new Shopify\Api\Client($httpClient);
+    $client->setClientSecret('ABC123XYZ');
 
-    $permanentAccessToken = $authenticate->usingClientSecret('ABC123XYZ')
-        ->toExchange($temporaryToken);
+    // validate the Shopify Request
+    if ($client->isValidRequest($_GET)) {
+
+        $temporaryToken = $_GET['code'];
+
+        // exchange the token
+        $permanentAccessToken = $authenticate->usingClientSecret('ABC123XYZ')
+            ->toExchange($temporaryToken);
+
+    }
+
+#### TODO: build request validation into exchange process
 
 ### Interacting with the Shopify API
 
