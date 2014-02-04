@@ -103,12 +103,15 @@ and use that to get the permanent access token from Shopify
     if ($client->isValidRequest($_GET)) {
 
         // exchange the token
-        $permanentAccessToken = $authenticate->usingClientSecret('ABC123XYZ')
+        $permanentAccessToken = $authenticate->forShopName('mycoolshop')
+            ->usingClientId('XXX1234567890')
+            ->usingClientSecret('ABC123XYZ')
             ->toExchange($_GET['code']);
 
     }
 
 #### TODO: build request validation into exchange process
+#### TODO: have AuthenticationGateway extend Api\Client
 
 ### Interacting with the Shopify API
 
