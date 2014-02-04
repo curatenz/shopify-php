@@ -142,6 +142,10 @@ class AuthenticationGateway
             )
         ));
 
+        if (isset($response->error)) {
+            throw new \RuntimeException($response->error);
+        }
+
         return isset($response->access_token) ? $response->access_token : null;
 
     }
