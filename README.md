@@ -102,11 +102,9 @@ and use that to get the permanent access token from Shopify
     // validate the Shopify Request
     if ($client->isValidRequest($_GET)) {
 
-        $temporaryToken = $_GET['code'];
-
         // exchange the token
         $permanentAccessToken = $authenticate->usingClientSecret('ABC123XYZ')
-            ->toExchange($temporaryToken);
+            ->toExchange($_GET['code']);
 
     }
 
