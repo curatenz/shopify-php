@@ -209,7 +209,6 @@ class AuthenticationGateway
 
     /**
      * assert that it is possible to proceed with authenticating the user
-     * @param string $clientSecret
      * @param string $temporaryToken
      * @return boolean
      */
