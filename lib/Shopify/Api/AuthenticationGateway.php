@@ -133,13 +133,15 @@ class AuthenticationGateway
             throw new \InvalidArgumentException('Shopify code is invalid');
         }
 
+        $request = array(
+            'client_id' => $this->getClientId(),
+            'client_secret' => $this->getClientSecret(),
+            'code' => $temporaryToken,
+        );
+
         $response = json_decode($this->httpClient->post(
             $this->getAccessUri(),
-            array(
-                'client_id' => $this->getClientId(),
-                'client_secret' => $this->getClientSecret(),
-                'code' => $temporaryToken,
-            )
+            $request
         ));
 
         if (isset($response->error)) {
