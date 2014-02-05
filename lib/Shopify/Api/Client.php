@@ -243,7 +243,13 @@ class Client
                 );
         }
 
-        return json_decode($response);
+        $response = json_decode($response);
+
+        if (isset($response->errors)) {
+            throw new \RuntimeException($response->errors);
+        }
+
+        return $response;
 
     }
 
