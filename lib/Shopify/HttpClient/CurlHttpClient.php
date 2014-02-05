@@ -149,7 +149,7 @@ class CurlHttpClient extends HttpClientAdapter
     {
 
         if (count($this->headers)) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
         }
 
         $response = curl_exec($ch);
