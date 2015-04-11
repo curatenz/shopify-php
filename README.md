@@ -1,6 +1,6 @@
 # shopify-php
 
-[![Latest Stable Version](https://poser.pugx.org/offshoot/shopify-php/v/stable.png)](https://packagist.org/packages/offshoot/shopify-php) [![Total Downloads](https://poser.pugx.org/offshoot/shopify-php/downloads.png)](https://packagist.org/packages/offshoot/shopify-php) [![Latest Unstable Version](https://poser.pugx.org/offshoot/shopify-php/v/unstable.png)](https://packagist.org/packages/offshoot/shopify-php) [![License](https://poser.pugx.org/offshoot/shopify-php/license.png)](https://packagist.org/packages/offshoot/shopify-php)
+[![License](https://poser.pugx.org/offshoot/shopify-php/license.png)](https://packagist.org/packages/offshoot/shopify-php)
 
 A simple [Shopify API](http://api.shopify.com/) client in PHP.
 
@@ -29,8 +29,14 @@ root directory and require shopify-php:
 
     {
       "require": {
-        "offshoot/shopify-php": "0.10.x"
-      }
+        "curate/shopify-php": "0.10.x"
+      },
+      "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:curatenz/shopify-php.git"
+        }
+      ]
     }
 
 To learn more about Composer, including the complete installation process,
@@ -47,7 +53,7 @@ might look something like this:
 
     {
       "require": {
-        "offshoot/shopify-php": "0.10.x",
+        "curate/shopify-php": "0.10.x",
         "haxx-se/curl": "1.0.0"
       },
       "repositories": [
