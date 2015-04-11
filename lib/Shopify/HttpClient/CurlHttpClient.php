@@ -47,7 +47,7 @@ class CurlHttpClient extends HttpClientAdapter
     {
 
         $this->certificatePath = $certificatePath;
-        $this->headers = array();
+        $this->headers = [];
 
     }
 
@@ -73,7 +73,7 @@ class CurlHttpClient extends HttpClientAdapter
 
     }
 
-    public function get($uri, array $params = array())
+    public function get($uri, array $params = [])
     {
 
         $uri .= '?' . http_build_query($params);
@@ -101,6 +101,47 @@ class CurlHttpClient extends HttpClientAdapter
 
     }
 
+
+    /**
+     * make a get request to the given uri
+     *
+     * @param string $uri
+     * @param array  $params
+     * @return mixed
+     */
+    public function put($uri, array $params = [ ])
+    {
+        $ch = $this->initCurlHandler($uri);
+        curl_setopt($ch, CURLOPT_PUT, true);
+
+        if (!is_null($params) && !is_array($params)) {
+            $this->headers[] = 'Content-Type: application/json';
+        }
+
+        if (!is_null($params)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        }
+
+        return $this->makeRequest($ch);
+    }
+
+    /**
+     * make a post request to the given uri
+     *
+     * @param string       $uri
+     * @param array|string $params
+     * @return mixed
+     */
+    public function delete($uri, $params = null)
+    {
+        $uri .= '?' . http_build_query($params);
+
+        $ch = $this->initCurlHandler($uri);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+
+        return $this->makeRequest($ch);
+    }
+
     /**
      * initialize the cURL handler
      * @param string $uri
@@ -109,7 +150,7 @@ class CurlHttpClient extends HttpClientAdapter
     protected function initCurlHandler($uri)
     {
 
-        $headers = array();
+        $headers = [];
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
@@ -139,7 +180,6 @@ class CurlHttpClient extends HttpClientAdapter
         return $ch;
 
     }
-
     /**
      * make the cURL request
      * @param resource $ch
@@ -166,5 +206,4 @@ class CurlHttpClient extends HttpClientAdapter
         return $response;
 
     }
-
 }

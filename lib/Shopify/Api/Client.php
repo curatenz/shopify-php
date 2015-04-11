@@ -99,6 +99,28 @@ class Client
     }
 
     /**
+     * make a PUT request to the Shopify API
+     * @param string $resource
+     * @param array $data
+     * @return \stdClass
+     */
+    public function put($resource, array $data = array())
+    {
+        return $this->makeApiRequest($resource, $data, HttpClient::PUT);
+    }
+
+    /**
+     * make a POST request to the Shopify API
+     * @param string $resource
+     * @param array $data
+     * @return \stdClass
+     */
+    public function delete($resource, array $data = array())
+    {
+        return $this->makeApiRequest($resource, $data, HttpClient::DELETE);
+    }
+
+    /**
      * generate the signature as required by shopify
      * @param array $params
      * @return string
@@ -189,7 +211,7 @@ class Client
     public function getNumberOfCallsRemaining(array $headers)
     {
         return $this->getCallLimit($headers)
-            - $this->getNumberOfCallsMade($headers);
+        - $this->getNumberOfCallsMade($headers);
     }
 
     /**
@@ -234,18 +256,24 @@ class Client
                 $data = json_encode($params);
                 $response = $this->getHttpClient()->post($uri, $data);
                 break;
-            case 'PUT':
-            case 'DELETE':
-            default:
-                throw new \RuntimeException(
-                    'Currently only "GET" and "POST" are supported. "PUT" and '
-                    . '"DELETE" functionality is currently under development'
-                );
+            case HttpClient::PUT:
+                $data = json_encode($params);
+                $response = $this->getHttpClient()->put($uri, $data);
+                break;
+            case HttpClient::DELETE:
+                $response = $this->getHttpClient()->delete($uri, $params);
+                break;
+//            default:
+//                throw new \RuntimeException(
+//                    'Currently only "GET" and "POST" are supported. "PUT" and '
+//                    . '"DELETE" functionality is currently under development'
+//                );
         }
 
         $response = json_decode($response);
 
         if (isset($response->errors)) {
+            dd($response->errors);
             throw new \RuntimeException($response->errors);
         }
 
