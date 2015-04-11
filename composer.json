@@ -1,5 +1,5 @@
 {
-  "name": "curate/shopify-php",
+  "name": "offshoot/shopify-php",
   "type": "library",
   "description": "Simple Shopify API client in PHP",
   "keywords": ["shopify","api"],
