@@ -274,7 +274,7 @@ class Client
 
         if (isset($response->errors)) {
             // Errors can sometimes be an array. Take this into account.
-            $error = is_string($response->errors) ? $response->errors : current($response->errors);
+            $error = is_string($response->errors) ? $response->errors : current(array_flatten($response->errors));
             throw new \RuntimeException($error);
         }
 
